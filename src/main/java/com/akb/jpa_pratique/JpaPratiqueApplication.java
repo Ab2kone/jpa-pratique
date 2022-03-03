@@ -17,6 +17,10 @@ public class JpaPratiqueApplication implements CommandLineRunner {
 	@Autowired
 	private PatientRepository patientRepository;
 
+	public static boolean getRandomBoolean() {
+		return Math.random() < 0.5;
+	}
+
 	public static void main(String[] args) {
 
 		SpringApplication.run(JpaPratiqueApplication.class, args);
@@ -26,7 +30,7 @@ public class JpaPratiqueApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		for (int i = 0; i< 100; i++){
-			patientRepository.save(new Patient(null, "nomPatient_"+i, new Date(), false, (int)(Math.random()*100)));
+			patientRepository.save(new Patient(null, "nomPatient_"+i, new Date(), getRandomBoolean(), (int)(Math.random()*100)));
 		}
 
 		Page<Patient> patients = patientRepository.findAll(PageRequest.of(0, 5));
@@ -44,7 +48,17 @@ public class JpaPratiqueApplication implements CommandLineRunner {
 			System.out.println(p.isMalade());
 		});
 
-		System.out.println("<====TROUVER LES PATIENT DONT ID=1 ====>");
+		Page<Patient> byMalade = patientRepository.findByMalade(true, PageRequest.of(0, 4));
+		System.out.println("<======= LIST DES PATIENTS MALADES PAGINES ========>");
+		byMalade.forEach(m -> {
+			System.out.println(m.getId());
+			System.out.println(m.getNom());
+			System.out.println(m.getScore());
+			System.out.println(m.getDateNaissance());
+			System.out.println(m.isMalade());
+		});
+
+		System.out.println("<==== TROUVER LES PATIENT DONT ID=1 ====>");
 		Patient patient = patientRepository.findById(1L).orElse(null);
 		if (patient != null){
 			System.out.println(patient.getNom());
