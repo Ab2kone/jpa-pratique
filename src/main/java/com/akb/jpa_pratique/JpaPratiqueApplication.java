@@ -58,6 +58,17 @@ public class JpaPratiqueApplication implements CommandLineRunner {
 			System.out.println(m.isMalade());
 		});
 
+		List<Patient> patientList = patientRepository.chercherPatients("%h%", 5);
+		System.out.println("<======= LIST DES PATIENTS DONT LE NOM CONTIENT 'h' ET LE SCORE < 5 ========>");
+		patientList.forEach(pl -> {
+			System.out.println(pl.getId());
+			System.out.println(pl.getNom());
+			System.out.println(pl.getScore());
+			System.out.println(pl.getDateNaissance());
+			System.out.println(pl.isMalade());
+		});
+
+
 		System.out.println("<==== TROUVER LES PATIENT DONT ID=1 ====>");
 		Patient patient = patientRepository.findById(1L).orElse(null);
 		if (patient != null){
